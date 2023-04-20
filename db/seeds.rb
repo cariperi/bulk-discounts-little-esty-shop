@@ -11,3 +11,4 @@ Item.destroy_all
 Invoice.destroy_all
 InvoiceItem.destroy_all
 Transaction.destroy_all
+BulkDiscount.destroy_all
