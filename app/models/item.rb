@@ -4,6 +4,7 @@ class Item < ApplicationRecord
   has_many :invoices, -> { distinct }, through: :invoice_items
   has_many :transactions, -> { distinct }, through: :invoices
   has_many :customers, -> { distinct }, through: :invoices
+  has_many :bulk_discounts, through: :merchant
 
   validates :name, presence: true
   validates :description, presence: true
