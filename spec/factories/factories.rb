@@ -28,4 +28,9 @@ FactoryBot.define do
     credit_card_number {Faker::Number.number(digits: 16)}
     result {Faker::Boolean.boolean}
   end
+
+  factory :bulk_discount do
+    threshold_quantity {Faker::Number.within(range: 100..1000)}
+    percentage {Faker::Number.within(range: 5..50)}
+  end
 end
