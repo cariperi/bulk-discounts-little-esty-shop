@@ -6,10 +6,10 @@
 
 <%= form_with model: BulkDiscount.new, url: merchant_bulk_discounts_path(@merchant), method: :post, local: true do |f| %>
   <%= f.label :percentage, "Percentage:" %>
-  <%= f.number_field :percentage, in: 10..90, step: 5 %>
+  <%= f.number_field :percentage, in: 10..90, step: 5 %><br>
 
   <%= f.label :threshold_quantity, "Quantity Required:" %>
-  <%= f.text_field :threshold_quantity %>
+  <%= f.number_field :threshold_quantity, min: 1 %><br>
 
   <%= f.submit "Add Discount" %>
 <% end %>
