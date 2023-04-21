@@ -1,0 +1,15 @@
+<%= render "shared/merchant_header" %>
+
+<h1>New Bulk Discount Page</h1>
+
+<h2>Enter details to create a new discount!</h2>
+
+<%= form_with model: BulkDiscount.new, url: merchant_bulk_discounts_path(@merchant), method: :post, local: true do |f| %>
+  <%= f.label :percentage, "Percentage:" %>
+  <%= f.number_field :percentage, in: 10..90, step: 5 %>
+
+  <%= f.label :threshold_quantity, "Quantity Required:" %>
+  <%= f.text_field :threshold_quantity %>
+
+  <%= f.submit "Add Discount" %>
+<% end %>
