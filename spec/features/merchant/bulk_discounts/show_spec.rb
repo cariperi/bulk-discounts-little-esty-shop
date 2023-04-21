@@ -60,7 +60,12 @@ RSpec.describe 'Bulk Discount Show Page', type: :feature do
     expect(page).to have_content("Quantity Threshold: 20 items")
   end
 
-  xit 'the form redirects to the edit page if no changes are made' do
+  it 'the form displays and error and redirects to the edit page if no changes are made' do
+    visit merchant_bulk_discount_path(@merchant_1, @bulk_1)
+    click_link("Edit Discount Details")
 
+    click_button "Edit Discount"
+
+    expect(page).to have_content("Error: You must update at least 1 field to continue.")
   end
 end
