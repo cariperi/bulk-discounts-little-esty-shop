@@ -1,5 +1,8 @@
 <%= render "shared/merchant_header" %>
 
-<h1>Bulk Discount <%=@discount.id%></h1>
+<h3>Bulk Discount ID: <%=@discount.id%></h3>
 
-<h3>For Merchant:</h3><p><%= @merchant.name %></p>
+<p><b>For Merchant:</b> <%= @merchant.name %></p>
+<p><b>Discount: </b><%= @discount.percentage %>%</p>
+<p><b>Quantity Threshold: </b><%= @discount.threshold_quantity %> items</p>
+
