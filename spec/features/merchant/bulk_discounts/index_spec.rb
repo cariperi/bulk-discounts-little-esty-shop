@@ -47,4 +47,36 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
 
     expect(page).to have_content("Error: Threshold quantity is not a number")
   end
+
+  it 'has links to delete each bulk discount that delete the specific discount for the merchant' do
+    visit merchant_bulk_discounts_path(@merchant_1)
+
+    expect(page).to have_content("Bulk Discount ID: #{@bulk_1.id}")
+    expect(page).to have_content("Discount: #{@bulk_1.percentage}%")
+    expect(page).to have_content("Quantity Threshold: #{@bulk_1.threshold_quantity} items")
+
+    expect(page).to have_content("Bulk Discount ID: #{@bulk_2.id}")
+    expect(page).to have_content("Discount: #{@bulk_2.percentage}%")
+    expect(page).to have_content("Quantity Threshold: #{@bulk_2.threshold_quantity} items")
+
+    within "#bulk-discount-#{@bulk_1.id}" do
+      expect(page).to have_link "Delete"
+      click_link "Delete"
+    end
+
+    expect(current_path).to eq(merchant_bulk_discounts_path(@merchant_1))
+    expect(page).to have_content("Discount successfully deleted!")
+
+    expect(page).to_not have_content("Bulk Discount ID: #{@bulk_1.id}")
+    expect(page).to_not have_content("Discount: #{@bulk_1.percentage}%")
+    expect(page).to_not have_content("Quantity Threshold: #{@bulk_1.threshold_quantity} items")
+
+
+    within "#bulk-discount-#{@bulk_2.id}" do
+      expect(page).to have_content("Bulk Discount ID: #{@bulk_2.id}")
+      expect(page).to have_content("Discount: #{@bulk_2.percentage}%")
+      expect(page).to have_content("Quantity Threshold: #{@bulk_2.threshold_quantity} items")
+      expect(page).to have_link "Delete"
+    end
+  end
 end
