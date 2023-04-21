@@ -5,10 +5,15 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-Customer.destroy_all
-Merchant.destroy_all
-Item.destroy_all
-Invoice.destroy_all
-InvoiceItem.destroy_all
-Transaction.destroy_all
-BulkDiscount.destroy_all
+
+# Customer.destroy_all
+# Merchant.destroy_all
+# Item.destroy_all
+# Invoice.destroy_all
+# InvoiceItem.destroy_all
+# Transaction.destroy_all
+# BulkDiscount.destroy_all
+
+@bulk_1 = BulkDiscount.create!(percentage: 20, threshold_quantity: 10, merchant_id: 1)
+@bulk_2 = BulkDiscount.create!(percentage: 30, threshold_quantity: 15, merchant_id: 1)
+@bulk_3 = BulkDiscount.create!(percentage: 15, threshold_quantity: 5, merchant_id: 2)

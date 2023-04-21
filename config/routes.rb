@@ -9,12 +9,13 @@ Rails.application.routes.draw do
     patch '/items/:id/toggle_item', to: 'merchant/items#toggle_item', as: 'toggle_item'
 
     resources :invoices, only: [:index, :show], controller: 'merchant/invoices'
+    resources :bulk_discounts, controller: 'merchant/bulk_discounts'
   end
 
   get '/admin', to: 'admin#index'
 
   resources :invoices, only: [:update]
-  
+
   resources :invoice_items, only: [:update]
 
   resources :merchants, only: [:update, :create, :new]
