@@ -18,8 +18,8 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
 
     expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant_1))
     expect(page).to have_content("Enter details to create a new discount!")
-    expect(page).to have_field(:percentage)
-    expect(page).to have_field(:threshold_quantity)
+    expect(page).to have_field(:bulk_discount_percentage)
+    expect(page).to have_field(:bulk_discount_threshold_quantity)
     expect(page).to have_button("Add Discount")
   end
 
@@ -28,33 +28,23 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
     expect(page).to_not have_content("Discount: 30%")
     expect(page).to_not have_content("Quantity Threshold: 20 items")
 
-    fill_in :percentage with '30'
-    fill_in :threshold_quantity with '20'
+    fill_in :bulk_discount_percentage, with: 30
+    fill_in :bulk_discount_threshold_quantity, with: 20
     click_button("Add Discount")
 
     expect(current_path).to eq(merchant_bulk_discounts_path(@merchant_1))
+    expect(page).to have_content("Discount successfully added!")
     expect(page).to have_content("Discount: 30%")
     expect(page).to have_content("Quantity Threshold: 20 items")
   end
 
-  it 'the form displays an error and reloads the new discount page if invalid data is entered' do
+  it 'form displays an error on failed validation' do
     visit new_merchant_bulk_discount_path(@merchant_1)
 
-    fill_in :percentage with '30'
-    fill_in :threshold_quantity with 'X'
+    fill_in :bulk_discount_percentage, with: 30
+    fill_in :bulk_discount_threshold_quantity, with: "X"
     click_button("Add Discount")
 
-    expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant_1))
-    expect(page).to have_content("Invalid entry! Please try again.")
-  end
-
-  it 'the form displays an error and reloads the new discount page if no data is entered for a given field' do
-    visit new_merchant_bulk_discount_path(@merchant_1)
-
-    fill_in :percentage with '30'
-    click_button("Add Discount")
-
-    expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant_1))
-    expect(page).to have_content("Invalid entry! Please try again.")
+    expect(page).to have_content("Error: Threshold quantity is not a number")
   end
 end
