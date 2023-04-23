@@ -26,6 +26,10 @@ class Invoice < ApplicationRecord
   end
 
   def total_revenue
-    invoice_items.sum('unit_price * quantity')
+    invoice_items.sum('invoice_items.unit_price * quantity')
+  end
+
+  def total_revenue_for_merchant(merchant_id)
+    invoice_items.select('invoice_items.*, items.merchant_id').joins(:item).where("items.merchant_id = #{merchant_id}").sum('invoice_items.unit_price * quantity')
   end
 end
