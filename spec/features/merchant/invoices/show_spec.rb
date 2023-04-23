@@ -11,6 +11,7 @@ RSpec.describe 'Merchant Invoices Show Page', type: :feature do
     @item_4 = create(:item, merchant_id: @merchant_1.id)
     @item_5 = create(:item, merchant_id: @merchant_1.id)
     @item_6 = create(:item, merchant_id: @merchant_2.id)
+    @item_7 = create(:item, merchant_id: @merchant_2.id)
 
     @customer_1 = create(:customer)
     @customer_2 = create(:customer)
@@ -60,6 +61,7 @@ RSpec.describe 'Merchant Invoices Show Page', type: :feature do
     @invoice_item_7 = create(:invoice_item, item_id: @item_5.id, invoice_id: @invoice_7.id, status: 2)
     @invoice_item_8 = create(:invoice_item, item_id: @item_2.id, invoice_id: @invoice_5.id, status: 2)
     @invoice_item_9 = create(:invoice_item, item_id: @item_6.id, invoice_id: @invoice_7.id, status: 2)
+    @invoice_item_10 = create(:invoice_item, item_id: @item_7.id, invoice_id: @invoice_1.id, status: 2) #check to see that total revenue only calcultes for the specific merchant's items on an invoice
 
     visit merchant_invoice_path(@merchant_1, @invoice_1)
   end
@@ -134,5 +136,18 @@ RSpec.describe 'Merchant Invoices Show Page', type: :feature do
       expect(current_path).to eq(merchant_invoice_path(@merchant_1, @invoice_1))
       expect(page).to have_content("Packaged")
     end
+  end
+
+  it 'displays total revenue from all of the merchants items on this invoice' do
+    @item_revenue_1 = (@invoice_item_1.quantity * @invoice_item_1.unit_price)
+    @item_revenue_2 = (@invoice_item_2.quantity * @invoice_item_2.unit_price)
+    @total_revenue = @item_revenue_1 + @item_revenue_2
+
+    expect(page).to have_content(format_currency(@total_revenue))
+  end
+
+  it 'displays total discounted revenue from all of the merchants items on this invoice' do
+    @bulk_1 = create(:bulk_discount, percentage: 20, threshold_quantity: 10, merchant_id: @merchant_1.id)
+    @bulk_2 = create(:bulk_discount, percentage: 30, threshold_quantity: 15, merchant_id: @merchant_1.id)
   end
 end
