@@ -14,7 +14,7 @@
 </div>
 
 <h3>Items on this Invoice:</h3>
-<% @invoice.invoice_items.each do |invoice_item| %>
+<% @invoice.merchant_items(@merchant.id).each do |invoice_item| %>
   <div id="item-info-<%= invoice_item.item.id %>">
     <p>Item Name: <%= invoice_item.item.name %></p>
     <p>Quantity: <%= format_item_info(invoice_item.item.quantity_sold(@invoice)) %></p>
