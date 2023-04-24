@@ -61,7 +61,7 @@ RSpec.describe 'Merchant Invoices Show Page', type: :feature do
     @invoice_item_7 = create(:invoice_item, item_id: @item_5.id, invoice_id: @invoice_7.id, status: 2)
     @invoice_item_8 = create(:invoice_item, item_id: @item_2.id, invoice_id: @invoice_5.id, status: 2)
     @invoice_item_9 = create(:invoice_item, item_id: @item_6.id, invoice_id: @invoice_7.id, status: 2)
-    @invoice_item_10 = create(:invoice_item, item_id: @item_7.id, invoice_id: @invoice_1.id, status: 2) #check to see that total revenue only calcultes for the specific merchant's items on an invoice
+    @invoice_item_10 = create(:invoice_item, item_id: @item_7.id, invoice_id: @invoice_1.id, status: 2) #check to see that total revenue only calculates for the specific merchant's items on an invoice
 
     visit merchant_invoice_path(@merchant_1, @invoice_1)
   end
