@@ -12,6 +12,7 @@ RSpec.describe 'Merchant Invoices Show Page', type: :feature do
     @item_5 = create(:item, merchant_id: @merchant_1.id)
     @item_6 = create(:item, merchant_id: @merchant_2.id)
     @item_7 = create(:item, merchant_id: @merchant_2.id)
+    @item_8 = create(:item, merchant_id: @merchant_1.id)
 
     @customer_1 = create(:customer)
     @customer_2 = create(:customer)
@@ -62,6 +63,10 @@ RSpec.describe 'Merchant Invoices Show Page', type: :feature do
     @invoice_item_8 = create(:invoice_item, item_id: @item_2.id, invoice_id: @invoice_5.id, status: 2)
     @invoice_item_9 = create(:invoice_item, item_id: @item_6.id, invoice_id: @invoice_7.id, status: 2)
     @invoice_item_10 = create(:invoice_item, item_id: @item_7.id, invoice_id: @invoice_1.id, status: 2) #check to see that total revenue only calculates for the specific merchant's items on an invoice
+    @invoice_item_11 = create(:invoice_item, quantity: 5, unit_price: 30000, item_id: @item_8.id, invoice_id: @invoice_1.id, status: 2) #check to see that an item that does not match any discount threshold quantities is not included in discounts
+
+    @bulk_1 = create(:bulk_discount, percentage: 10, threshold_quantity: 80, merchant_id: @merchant_1.id)
+    @bulk_2 = create(:bulk_discount, percentage: 20, threshold_quantity: 500, merchant_id: @merchant_1.id)
 
     visit merchant_invoice_path(@merchant_1, @invoice_1)
   end
@@ -105,7 +110,7 @@ RSpec.describe 'Merchant Invoices Show Page', type: :feature do
   end
 
   it 'will display the total revenue that will be generated from all of my items on the invoice (User Story 17)' do
-    expect(page).to have_content("Total Revenue: $340,000.00")
+    expect(page).to have_content("Total Revenue: $341,500.00")
   end
 
   it 'I will see the invoice item status for the item selected, when I click the select I can select a new status for the item with a button next to that says Update Item Status' do
@@ -139,15 +144,20 @@ RSpec.describe 'Merchant Invoices Show Page', type: :feature do
   end
 
   it 'displays total revenue from all of the merchants items on this invoice' do
-    @item_revenue_1 = (@invoice_item_1.quantity * @invoice_item_1.unit_price)
-    @item_revenue_2 = (@invoice_item_2.quantity * @invoice_item_2.unit_price)
-    @total_revenue = @item_revenue_1 + @item_revenue_2
+    item_revenue_1 = (@invoice_item_1.quantity * @invoice_item_1.unit_price)
+    item_revenue_2 = (@invoice_item_2.quantity * @invoice_item_2.unit_price)
+    item_revenue_3 = (@invoice_item_11.quantity * @invoice_item_11.unit_price)
+    total_revenue = item_revenue_1 + item_revenue_2 + item_revenue_3
 
-    expect(page).to have_content(format_currency(@total_revenue))
+    expect(page).to have_content("Total Revenue: #{format_currency(total_revenue)}")
   end
 
   it 'displays total discounted revenue from all of the merchants items on this invoice' do
-    @bulk_1 = create(:bulk_discount, percentage: 20, threshold_quantity: 10, merchant_id: @merchant_1.id)
-    @bulk_2 = create(:bulk_discount, percentage: 30, threshold_quantity: 15, merchant_id: @merchant_1.id)
+    item_revenue_1 = (@invoice_item_1.quantity * @invoice_item_1.unit_price) * ((100 - @bulk_1.percentage).fdiv(100))
+    item_revenue_2 = (@invoice_item_2.quantity * @invoice_item_2.unit_price) * ((100 - @bulk_2.percentage).fdiv(100))
+    item_revenue_3 = (@invoice_item_11.quantity * @invoice_item_11.unit_price)
+    total_revenue = item_revenue_1 + item_revenue_2 + item_revenue_3
+
+    expect(page).to have_content("Total Discounted Revenue: #{format_currency(total_revenue)}")
   end
 end
