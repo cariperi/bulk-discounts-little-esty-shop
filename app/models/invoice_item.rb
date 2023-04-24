@@ -10,4 +10,19 @@ class InvoiceItem < ApplicationRecord
   validates :status, presence: true
 
   enum status: ["Pending", "Packaged", "Shipped"]
+
+  def get_discount_id
+    result = InvoiceItem.where("invoice_items.id = ?", self.id)
+                        .joins(item: :bulk_discounts)
+                        .where('invoice_items.quantity >= bulk_discounts.threshold_quantity')
+                        .order('bulk_discounts.percentage desc')
+                        .select('invoice_items.*, bulk_discounts.*, bulk_discounts.id as bulk_discount_id')
+                        .first
+
+    result.nil? ? nil : result.bulk_discount_id
+  end
+
+  def discount_applied?
+    get_discount_id.nil? == false
+  end
 end

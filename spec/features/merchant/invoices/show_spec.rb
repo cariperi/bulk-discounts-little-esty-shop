@@ -106,7 +106,7 @@ RSpec.describe 'Merchant Invoices Show Page', type: :feature do
       expect(page).to have_content("Status: Shipped")
     end
 
-    expect(page).to_not have_content(@item_6.name)
+    expect(page).to_not have_content(@item_7.name)
   end
 
   it 'will display the total revenue that will be generated from all of my items on the invoice (User Story 17)' do
@@ -159,5 +159,28 @@ RSpec.describe 'Merchant Invoices Show Page', type: :feature do
     total_revenue = item_revenue_1 + item_revenue_2 + item_revenue_3
 
     expect(page).to have_content("Total Discounted Revenue: #{format_currency(total_revenue)}")
+  end
+
+  it 'includes a link to the show page for the bulk discount applied - if any - next to each invoice item' do
+    within "#item-info-#{@item_1.id}" do
+      expect(page).to have_link("Discount Applied")
+      click_link "Discount Applied"
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant_1, @bulk_1))
+    end
+
+    visit merchant_invoice_path(@merchant_1, @invoice_1)
+
+    within "#item-info-#{@item_2.id}" do
+      expect(page).to have_link("Discount Applied")
+      click_link "Discount Applied"
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant_1, @bulk_2))
+    end
+
+    visit merchant_invoice_path(@merchant_1, @invoice_1)
+
+    within "#item-info-#{@item_8.id}" do
+      expect(page).to_not have_link("Discount Applied")
+      expect(page).to have_content("No discount applied.")
+    end
   end
 end
