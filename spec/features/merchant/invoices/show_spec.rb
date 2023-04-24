@@ -180,6 +180,7 @@ RSpec.describe 'Merchant Invoices Show Page', type: :feature do
 
     within "#item-info-#{@item_8.id}" do
       expect(page).to_not have_link("Discount Applied")
+      expect(page).to have_content("No discount applied.")
     end
   end
 end
