@@ -1,6 +1,6 @@
 <%= render "shared/merchant_header" %>
 
-<h2>New Bulk Discount Page</h2>
+<h2 class="center-header">New Bulk Discount</h2>
 
 <h3>Enter details to create a new discount!</h3>
 
@@ -9,7 +9,7 @@
   <%= f.number_field :percentage, in: 10..90, step: 5 %><br>
 
   <%= f.label :threshold_quantity, "Quantity Required:" %>
-  <%= f.number_field :threshold_quantity, min: 1 %><br>
+  <%= f.number_field :threshold_quantity, min: 1, max: 9999 %><br>
 
   <%= f.submit "Add Discount" %>
 <% end %>
