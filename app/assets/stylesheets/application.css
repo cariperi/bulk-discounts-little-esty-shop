@@ -70,3 +70,10 @@ input {
 .image {
   padding: 10px;
 }
+
+.container {
+  display: flex;
+}
+.container > div {
+  flex: 1;
+}

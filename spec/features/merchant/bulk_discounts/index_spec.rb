@@ -79,4 +79,31 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
       expect(page).to have_link "Delete"
     end
   end
+
+  describe 'Holidays API Consumption (User Story 9)' do
+    it 'has a section for upcoming holidays with the name and date of the next 3 upcoming US holidays' do
+      visit merchant_bulk_discounts_path(@merchant_1)
+
+      within "#upcoming-holidays" do
+        expect(page).to have_content("Upcoming Holidays")
+
+        within "#holiday-1" do
+          expect(page).to have_content("Name:")
+          expect(page).to have_content("Date:")
+        end
+
+        within "#holiday-2" do
+          expect(page).to have_content("Name:")
+          expect(page).to have_content("Date:")
+        end
+
+        within "#holiday-3" do
+          expect(page).to have_content("Name:")
+          expect(page).to have_content("Date:")
+        end
+
+        expect(page).to_not have_css("holiday-4")
+      end
+    end
+  end
 end

@@ -47,6 +47,8 @@ end
 
 RSpec.configure do |config|
   config.before(:each) do
+    WebMock.disable_net_connect!(allow: 'https://date.nager.at')
+
     api_key = Rails.application.config.unsplash_api_key
 
     stub_request(:get, "https://api.unsplash.com/photos/qMehmIyaXvY/?client_id=#{api_key}").with(
