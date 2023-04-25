@@ -11,10 +11,15 @@ class Merchant::BulkDiscountsController < ApplicationController
 
   def create
     discount = BulkDiscount.new(bulk_discount_params.merge(merchant_id: @merchant.id))
-    if discount.save
-      redirect_to merchant_bulk_discounts_path(@merchant), notice: "Discount successfully added!"
+    if valid_discount?
+      if discount.save
+        redirect_to merchant_bulk_discounts_path(@merchant), notice: "Discount successfully added!"
+      else
+        flash.now[:alert] = "Error: #{error_message(discount.errors)}"
+        render :new
+      end
     else
-      flash.now[:alert] = "Error: #{error_message(discount.errors)}"
+      flash.now[:alert] = "Try again! You cannot create a discount that will not be applied."
       render :new
     end
   end
@@ -53,8 +58,17 @@ class Merchant::BulkDiscountsController < ApplicationController
     params.require(:bulk_discount).permit(:percentage, :threshold_quantity)
   end
 
+  def valid_discount?
+    current_discount = @merchant.lowest_quantity_discount
+    current_percentage = current_discount.percentage
+    current_quantity = current_discount.threshold_quantity
+
+    (bulk_discount_params[:percentage].to_i > current_percentage) ||
+    (bulk_discount_params[:threshold_quantity].to_i < current_quantity)
+  end
+
   def attributes_changed?
-    (bulk_discount_params[:percentage] != @discount.percentage.to_s) ||
-    (bulk_discount_params[:threshold_quantity] != @discount.threshold_quantity.to_s)
+    (bulk_discount_params[:percentage].to_i != @discount.percentage) ||
+    (bulk_discount_params[:threshold_quantity].to_i != @discount.threshold_quantity)
   end
 end
