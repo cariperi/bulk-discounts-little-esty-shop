@@ -5,13 +5,25 @@
 <h2 class="center-header">Bulk Discounts for <%= @merchant.name %></h2>
 
 <ul>
-<% @merchant.bulk_discounts.each do |discount| %>
-  <div id="bulk-discount-<%= discount.id %>">
-    <h3>Bulk Discount ID: <%= discount.id %></h3>
-    <li>Discount: <%= discount.percentage %>%</li>
-    <li>Quantity Threshold: <%= discount.threshold_quantity %> items</li>
-    <p><%= link_to "More Info", merchant_bulk_discount_path(@merchant, discount) %> |
-    <%= link_to "Delete", merchant_bulk_discount_path(@merchant, discount), method: :delete %></p>
+  <% @merchant.bulk_discounts.each do |discount| %>
+    <div id="bulk-discount-<%= discount.id %>">
+      <h3>Bulk Discount ID: <%= discount.id %></h3>
+      <li>Discount: <%= discount.percentage %>%</li>
+      <li>Quantity Threshold: <%= discount.threshold_quantity %> items</li>
+      <p><%= link_to "More Info", merchant_bulk_discount_path(@merchant, discount) %> |
+      <%= link_to "Delete", merchant_bulk_discount_path(@merchant, discount), method: :delete %></p>
+    </div>
+  <% end %>
+</ul>
+
+<div id="upcoming-holidays">
+  <h2 class="center-header">Upcoming Holidays</h2>
+  <div class="container">
+    <% @holidays.each_with_index do |holiday, i| %>
+      <div id="holiday-<%= (i + 1) %>">
+        <p><b>Name: </b><%= holiday.name %></p>
+        <p><b>Date: </b><%= format_date(holiday.date.to_date) %></p>
+      </div>
+    <% end %>
   </div>
-<% end %>
- </ul>
+</div>

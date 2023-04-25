@@ -1,7 +1,9 @@
 class Merchant::BulkDiscountsController < ApplicationController
   before_action :find_merchant, only: [:index, :show, :new, :create, :edit, :update, :destroy]
   before_action :find_discount, only: [:show, :edit, :update, :destroy]
+
   def index
+    @holidays = HolidaySearch.new.top_holidays(3)
   end
 
   def new
