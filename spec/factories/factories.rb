@@ -30,7 +30,9 @@ FactoryBot.define do
   end
 
   factory :bulk_discount do
-    threshold_quantity {Faker::Number.within(range: 100..1000)}
-    percentage {Faker::Number.within(range: 5..50)}
+    sequence(:id)
+    percentage {Faker::Number.between(from: 10, to: 50)}
+    threshold_quantity {Faker::Number.between(from: 5, to: 20)}
+    association :merchant
   end
 end
