@@ -47,7 +47,7 @@ end
 
 RSpec.configure do |config|
   config.before(:each) do
-    WebMock.disable_net_connect!(allow: 'https://date.nager.at')
+    # WebMock.disable_net_connect!(allow: 'https://date.nager.at')
 
     api_key = Rails.application.config.unsplash_api_key
 
@@ -59,16 +59,23 @@ RSpec.configure do |config|
       })
     .to_return(status: 200, body: LOGO_PHOTO_RESPONSE.to_json)
 
-    stub_request(:get, "https://api.unsplash.com/photos/random/?client_id=#{api_key}").to_return(status: 200, body: RANDOM_PHOTO_RESPONSE.to_json)
+    stub_request(:get, "https://api.unsplash.com/photos/random/?client_id=#{api_key}")
+    .to_return(status: 200, body: RANDOM_PHOTO_RESPONSE.to_json)
 
     search_term = "Dog"
-    stub_request(:get, "https://api.unsplash.com/search/photos?client_id=#{api_key}&page=1&query=#{search_term}").to_return(status: 200, body: SEARCH_PHOTO_RESPONSE.to_json)
+    stub_request(:get, "https://api.unsplash.com/search/photos?client_id=#{api_key}&page=1&query=#{search_term}")
+    .to_return(status: 200, body: SEARCH_PHOTO_RESPONSE.to_json)
 
     search_term = "Assumenda%20Animi"
     stub_request(:get, "https://api.unsplash.com/search/photos?page=1&query=#{search_term}&client_id=#{api_key}")
     .to_return(status: 200, body: SEARCH_NOT_FOUND_RESPONSE.to_json)
 
-    stub_request(:get, "https://api.unsplash.com/photos/Hl_o1K6OPsA/?client_id=#{api_key}").to_return(status: 200, body: ERROR_PHOTO_RESPONSE.to_json)
+    stub_request(:get, "https://api.unsplash.com/photos/Hl_o1K6OPsA/?client_id=#{api_key}")
+    .to_return(status: 200, body: ERROR_PHOTO_RESPONSE.to_json)
+
+    country_code = 'US'
+    stub_request(:get, "https://date.nager.at/api/v3/NextPublicHolidays/#{country_code}")
+    .to_return(status: 200, body: HOLIDAY_RESPONSE.to_json)
   end
 
   config.include FactoryBot::Syntax::Methods
