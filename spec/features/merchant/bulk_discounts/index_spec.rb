@@ -88,21 +88,22 @@ RSpec.describe 'Merchant Bulk Discounts Index Page', type: :feature do
         expect(page).to have_content("Upcoming Holidays")
 
         within "#holiday-1" do
-          expect(page).to have_content("Name:")
-          expect(page).to have_content("Date:")
+          expect(page).to have_content("Name: Memorial Day")
+          expect(page).to have_content("Date: Monday, May 29, 2023")
         end
 
         within "#holiday-2" do
-          expect(page).to have_content("Name:")
-          expect(page).to have_content("Date:")
+          expect(page).to have_content("Name: Juneteenth")
+          expect(page).to have_content("Date: Monday, June 19, 2023")
         end
 
         within "#holiday-3" do
-          expect(page).to have_content("Name:")
-          expect(page).to have_content("Date:")
+          expect(page).to have_content("Name: Independence Day")
+          expect(page).to have_content("Date: Tuesday, July 04, 2023")
         end
 
         expect(page).to_not have_css("holiday-4")
+        expect(page).to_not have_content("Name: Labor Day")
       end
     end
   end

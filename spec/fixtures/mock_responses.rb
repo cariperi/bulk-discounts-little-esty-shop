@@ -66,4 +66,31 @@ module MockResponses
     "height": 3927,
     "likes": 235
   }.freeze
+
+  HOLIDAY_RESPONSE = [
+    {
+      "date": "2023-05-29",
+      "localName": "Memorial Day",
+      "name": "Memorial Day",
+      "countryCode": "US"
+    },
+    {
+      "date": "2023-06-19",
+      "localName": "Juneteenth",
+      "name": "Juneteenth",
+      "countryCode": "US"
+    },
+    {
+      "date": "2023-07-04",
+      "localName": "Independence Day",
+      "name": "Independence Day",
+      "countryCode": "US"
+    },
+    {
+      "date": "2023-09-04",
+      "localName": "Labor Day",
+      "name": "Labour Day",
+      "countryCode": "US"
+    }
+  ].freeze
 end

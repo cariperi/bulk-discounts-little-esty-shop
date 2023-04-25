@@ -3,6 +3,6 @@ class Holiday
 
   def initialize(data)
     @date = data[:date]
-    @name = data[:name]
+    @name = data[:localName]
   end
 end
