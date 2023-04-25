@@ -14,7 +14,6 @@ RSpec.describe 'Merchant New Bulk Discounts', type: :feature do
       fill_in :bulk_discount_threshold_quantity, with: 15
       click_button("Add Discount")
 
-      # expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant_1))
       expect(page).to have_content("Try again! You cannot create a discount that will not be applied.")
     end
   end
