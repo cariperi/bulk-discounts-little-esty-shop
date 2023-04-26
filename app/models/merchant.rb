@@ -61,7 +61,8 @@ class Merchant < ApplicationRecord
     items.joins(:transactions).select("items.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue").where(transactions: {result: "success"}).group("items.id").order(revenue: :desc).limit(5)
   end
 
-  def lowest_quantity_discount
-    bulk_discounts.order("threshold_quantity ASC, percentage DESC").first
+  def find_best_discount(quantity)
+    best_discount = bulk_discounts.where('threshold_quantity <= ?', quantity).order(percentage: :desc).first
+    best_discount.nil? ? 0 : best_discount.percentage
   end
 end
