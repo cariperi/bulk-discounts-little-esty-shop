@@ -10,12 +10,12 @@ class Merchant::BulkDiscountsController < ApplicationController
   end
 
   def create
-    discount = BulkDiscount.new(bulk_discount_params.merge(merchant_id: @merchant.id))
-    if discount.save
-      redirect_to merchant_bulk_discounts_path(@merchant), notice: "Discount successfully added!"
-    else
-      flash.now[:alert] = "Error: #{error_message(discount.errors)}"
+    @discount = BulkDiscount.new(bulk_discount_params.merge(merchant_id: @merchant.id))
+    if invalid_discount?
+      flash.now[:alert] = "Try again! You cannot create a discount that will not be applied."
       render :new
+    else
+      check_for_save
     end
   end
 
@@ -27,8 +27,7 @@ class Merchant::BulkDiscountsController < ApplicationController
 
   def update
     if attributes_changed?
-      @discount.update(bulk_discount_params)
-      redirect_to merchant_bulk_discount_path(@merchant, @discount), notice: "Discount successfully updated!"
+      check_edit_validity
     else
       flash.now[:alert] = "Error: You must update at least 1 field to continue."
       render :edit
@@ -53,8 +52,36 @@ class Merchant::BulkDiscountsController < ApplicationController
     params.require(:bulk_discount).permit(:percentage, :threshold_quantity)
   end
 
+  def invalid_discount?
+    current_discount = @merchant.lowest_quantity_discount
+    current_percentage = current_discount.percentage
+    current_quantity = current_discount.threshold_quantity
+
+    (bulk_discount_params[:percentage].to_i < current_percentage) &&
+    (bulk_discount_params[:threshold_quantity].to_i >= current_quantity)
+  end
+
   def attributes_changed?
-    (bulk_discount_params[:percentage] != @discount.percentage.to_s) ||
-    (bulk_discount_params[:threshold_quantity] != @discount.threshold_quantity.to_s)
+    (bulk_discount_params[:percentage].to_i != @discount.percentage) ||
+    (bulk_discount_params[:threshold_quantity].to_i != @discount.threshold_quantity)
+  end
+
+  def check_for_save
+    if @discount.save
+      redirect_to merchant_bulk_discounts_path(@merchant), notice: "Discount successfully added!"
+    else
+      flash.now[:alert] = "Error: #{error_message(@discount.errors)}"
+      render :new
+    end
+  end
+
+  def check_edit_validity
+    if invalid_discount?
+      flash.now[:alert] = "Try again! The attempted update would make this discount invalid."
+      render :edit
+    else
+      @discount.update(bulk_discount_params)
+      redirect_to merchant_bulk_discount_path(@merchant, @discount), notice: "Discount successfully updated!"
+    end
   end
 end
