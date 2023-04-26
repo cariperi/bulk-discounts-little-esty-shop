@@ -216,18 +216,22 @@ RSpec.describe Merchant, type: :model do
         end
       end
 
-      describe '#lowest_quantity_discount' do
-        it 'returns the bulk discount with the lowest quantity + highest percentage if a tie' do
+      describe '#find_best_discount(quantity)' do
+        it 'returns the best percentage applied to the requested quantity or below' do
           @merchant_2 = create(:merchant)
 
-          @bulk_1 = create(:bulk_discount, percentage: 20, threshold_quantity: 10, merchant_id: @merchant_1.id)
-          @bulk_2 = create(:bulk_discount, percentage: 15, threshold_quantity: 5, merchant_id: @merchant_1.id)
+          @bulk_1 = create(:bulk_discount, percentage: 15, threshold_quantity: 10, merchant_id: @merchant_1.id)
+          @bulk_2 = create(:bulk_discount, percentage: 20, threshold_quantity: 5, merchant_id: @merchant_1.id)
           @bulk_3 = create(:bulk_discount, percentage: 10, threshold_quantity: 2, merchant_id: @merchant_1.id)
-          @bulk_4 = create(:bulk_discount, percentage: 30, threshold_quantity: 2, merchant_id: @merchant_1.id)
+          @bulk_4 = create(:bulk_discount, percentage: 5, threshold_quantity: 2, merchant_id: @merchant_1.id)
           @bulk_5 = create(:bulk_discount, percentage: 10, threshold_quantity: 1, merchant_id: @merchant_2.id)
 
-          expect(@merchant_1.lowest_quantity_discount).to eq(@bulk_4)
-          expect(@merchant_2.lowest_quantity_discount).to eq(@bulk_5)
+          expect(@merchant_1.find_best_discount(3)).to eq(10)
+          expect(@merchant_1.find_best_discount(2)).to eq(10)
+          expect(@merchant_1.find_best_discount(11)).to eq(20)
+          expect(@merchant_1.find_best_discount(9)).to eq(20)
+          expect(@merchant_2.find_best_discount(1)).to eq(10)
+          expect(@merchant_1.find_best_discount(1)).to eq(0)
         end
       end
     end
