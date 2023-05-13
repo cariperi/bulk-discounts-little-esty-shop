@@ -66,7 +66,7 @@ This application uses the `Simplecov` gem to monitor test coverage. Current cove
 
 ## Deployment
 
-This application is deployed with Render [here](https://bulk-discounts-little-esty-shop.onrender.com/)).
+This application is deployed with Render [here](https://bulk-discounts-little-esty-shop.onrender.com/).
 
 ## Project Status and Potential Next Steps
 
